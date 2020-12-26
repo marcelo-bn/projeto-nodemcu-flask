@@ -32,6 +32,11 @@ vegetais = [
         "tipo": "tomate",
         "temperatura": "25",
         "umidade": "60"
+    },
+    {
+        "tipo": "cebolinha",
+        "temperatura": "25",
+        "umidade": "65"
     }
 ]
 
@@ -104,7 +109,13 @@ def obtem_info():
 # App mobile realiza para obter lista de vegetais que podem ser cadastrados
 @app.route('/vegetal', methods=['GET'])
 def obtem_vegetal():
-    pass
+    global vegetais
+    lista_vegetais = []
+
+    for item in vegetais:
+        lista_vegetais.append(item['tipo'])
+
+    return jsonify({'lista_bomba': lista_vegetais})
 
 # App mobile realiza indicar tipo de vegetal
 @app.route('/vegetal', methods=['POST'])
