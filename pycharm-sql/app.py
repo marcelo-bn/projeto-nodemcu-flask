@@ -101,18 +101,26 @@ def obtem_info():
     return jsonify({'lista_info': lista_info})
 
 
+# App mobile realiza para obter lista de vegetais que podem ser cadastrados
+@app.route('/vegetal', methods=['GET'])
+def obtem_vegetal():
+    pass
+
 # App mobile realiza indicar tipo de vegetal
 @app.route('/vegetal', methods=['POST'])
 def add_vegetal():
-    global conjunto_vegetal
+    global conjunto_vegetal, vegetais
+
     tipo = request.json.get('tipo')
     idConjunto = request.json.get('idConjunto')
 
-    try:
-        conjunto_vegetal[int(idConjunto) - 1] = tipo
-        return make_response(jsonify('Vegetal cadastrado!'), 200)
-    except:
-        return make_response(jsonify('Erro ao cadastrar vegetal'), 406)
+    for item in vegetais:
+        if tipo == item['tipo']: # Verifica se está na lista de vegetais
+            try:
+                conjunto_vegetal[int(idConjunto) - 1] = tipo
+                return make_response(jsonify('Vegetal cadastrado!'), 200)
+            except:
+                return make_response(jsonify('Erro ao cadastrar vegetal!'), 406)
 
 
 # App mobile realiza para ligar bomba
