@@ -100,7 +100,7 @@ bool post_informacao(unsigned int temperatura, unsigned int umidade, unsigned in
     http.begin(url_post);
     http.addHeader("Content-Type", "application/json");
     httpCode = http.POST(informacao);
-    payload = http.getString();
+    response = http.getString();
   }
   Serial.print("Payload:");
   Serial.println(response);
