@@ -43,6 +43,8 @@ vegetais = [
 # Qual tipo de vegetal é cada conjunto [0] - Conjunto 1, [1] - Conjunto 2,
 conjunto_vegetal = ['', '']
 
+# Qual conjunto está ativo
+conjunto_ativo = [0, 0]
 
 # Nodemcu realiza para verificar se deve ligar a bomba
 @app.route('/bomba', methods=['GET'])
@@ -68,7 +70,7 @@ def add_info():
     umidade = request.json.get('umidade')
     data = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-    if (conjunto_vegetal[int(idConjunto)-1] != ''):
+    if conjunto_vegetal[int(idConjunto) - 1] != '':
         # Inserção no banco
         query_str = 'INSERT INTO Sistema (idConjunto,temperatura,umidade,tipo,data) VALUES (\'' \
                     + idConjunto + '\',\'' + temperatura + '\',\'' + umidade + '\',\'' + conjunto_vegetal[int(idConjunto)-1] + '\',\'' + data + '\')'
@@ -85,6 +87,22 @@ def add_info():
 
     else:
         return make_response(jsonify('Objeto não cadastrado, informe o tipo do vegetal!'), 406)
+
+
+# Nodemcu realiza para informar qual conjunto está ativo
+@app.route('/ativo', methods=['POST'])
+def ativos():
+    global conjunto_ativo
+    conjunto1 = request.json.get('conjunto1')
+    conjunto2 = request.json.get('conjunto2')
+
+    try:
+        conjunto_ativo[0] = int(conjunto1)
+        conjunto_ativo[1] = int(conjunto2)
+        return make_response(jsonify('Ativação concluída!'), 200)
+    except Exception as e:
+        return make_response(jsonify('Erro ao realizar operação!'), 406)
+
 
 # App mobile realiza para obter dados do banco
 @app.route('/informacao', methods=['GET'])
@@ -117,21 +135,25 @@ def obtem_vegetal():
 
     return jsonify({'lista_bomba': lista_vegetais})
 
+
 # App mobile realiza indicar tipo de vegetal
-@app.route('/vegetal', methods=['POST'])
+@app.route('/cadastro', methods=['POST'])
 def add_vegetal():
-    global conjunto_vegetal, vegetais
+    global conjunto_vegetal, vegetais, conjunto_ativo
 
     tipo = request.json.get('tipo')
     idConjunto = request.json.get('idConjunto')
 
-    for item in vegetais:
-        if tipo == item['tipo']: # Verifica se está na lista de vegetais
-            try:
-                conjunto_vegetal[int(idConjunto) - 1] = tipo
-                return make_response(jsonify('Vegetal cadastrado!'), 200)
-            except:
-                return make_response(jsonify('Erro ao cadastrar vegetal!'), 406)
+    if conjunto_ativo[int(idConjunto)-1] == 1: # Verifica se o conjunto está ativo
+        for item in vegetais:
+            if tipo == item['tipo']: # Verifica se o tipo recebido está na lista de vegetais
+                try:
+                    conjunto_vegetal[int(idConjunto) - 1] = tipo # Adiciona o tipo na posição referente ao conjunto
+                    return make_response(jsonify('Vegetal cadastrado!'), 200)
+                except:
+                    return make_response(jsonify('Erro ao cadastrar vegetal!'), 406)
+    else:
+        return make_response(jsonify('Esse conjunto não está ativo!'), 406)
 
 
 # App mobile realiza para ligar bomba
@@ -143,11 +165,14 @@ def add_bomba():
     idConjunto = request.json.get('idConjunto')
     tempo = request.json.get('tempo')
 
-    try:
-        lista_bomba.append({"idConjunto": idConjunto, "tempo": tempo})
-        return make_response(jsonify('A bomba será acionada!'), 200)
-    except:
-        return make_response(jsonify('Erro ao acionar bomba'), 406)
+    if conjunto_ativo[int(idConjunto) - 1] == 1:  # Verifica se o conjunto está ativo
+        try:
+            lista_bomba.append({"idConjunto": idConjunto, "tempo": tempo})
+            return make_response(jsonify('A bomba será acionada!'), 200)
+        except:
+            return make_response(jsonify('Erro ao acionar bomba'), 406)
+    else:
+        return make_response(jsonify('Esse conjunto não está ativo!'), 406)
 
 
 # Verifica se precisa acionar a bomba e adiciona na lista de bomba
