@@ -66,14 +66,21 @@ void loop() {
   unsigned int umi_2 = 50; // digitalRead(pin_umi_2)
 
   if (state_botao_1 == HIGH and state_botao_2 == HIGH) {
+    post_conjunto_ativo(1,1);
+    delay(1000);
     post_informacao(temp_1,umi_1,1) ;
-    delay(5000);
+    delay(1000);
     post_informacao(temp_2,umi_2,2);
+    delay(1000);
   } 
   else if (state_botao_1 == HIGH and state_botao_2 == LOW) {
+   post_conjunto_ativo(1,0);
+   delay(1000);
    post_informacao(temp_1,umi_1,2);
   }
   else if (state_botao_1 == LOW and state_botao_2 == HIGH) {
+   post_conjunto_ativo(0,1);
+   delay(1000);
    post_informacao(temp_2,umi_2,2);
   }
 
@@ -110,5 +117,3 @@ bool post_informacao(unsigned int temperatura, unsigned int umidade, unsigned in
   return 1;
 
 }
-
-//std::vector<int> get_bomba() {}
