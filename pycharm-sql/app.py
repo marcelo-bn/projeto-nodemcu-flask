@@ -21,25 +21,6 @@ lista_bomba = [
     }
 ]
 
-# Lista de vegetais e quantidade de água necessária
-vegetais = [
-    {
-        "tipo": "alface",
-        "temperatura": "25",
-        "umidade": "75"
-    },
-    {
-        "tipo": "tomate",
-        "temperatura": "25",
-        "umidade": "60"
-    },
-    {
-        "tipo": "cebolinha",
-        "temperatura": "25",
-        "umidade": "65"
-    }
-]
-
 # Qual tipo de vegetal é cada conjunto [0] - Conjunto 1, [1] - Conjunto 2,
 conjunto_vegetal = ['', '']
 
@@ -105,16 +86,61 @@ def altera_vegetal():
     nome = request.json.get('nome')
     tempIdeal = request.json.get('tempIdeal')
     umidadeIdeal = request.json.get('umidadeIdeal')
-    print(type(int(tempIdeal)))
 
     try:
         query_str = 'UPDATE Vegetal SET tempIdeal = ' + tempIdeal + ', umidadeIdeal = ' + umidadeIdeal + \
                     ' WHERE nome = \'' + nome + '\''
         cursor.execute(query_str)
-        print(banco.commit())
+        banco.commit()
         return make_response(jsonify('Vegetal atualizado!'), 201)
     except Exception as e:
         return make_response(jsonify('Vegetal não atualizado!'), 406)
+
+
+# App mobile realiza para obter o estado dos vasos
+@app.route('/vaso', methods=['GET'])
+def obtem_vaso():
+
+    # Conexão com o banco
+    banco = sqlite3.connect('banco.db')
+    cursor = banco.cursor()
+
+    # Lista de vegetais
+    lista_vasos = []
+
+    # Selecionando os dados do banco
+    query_str = 'SELECT * FROM Vaso'
+    info = cursor.execute(query_str).fetchall()
+
+    try:
+        for item in info:
+            lista_vasos.append({"id": item[0], "status": item[1], "bomba": item[2],
+            "tempo": item[3], "vegetal": item[4]})
+
+        return jsonify({'lista_vasos': lista_vasos})
+    except:
+        return make_response(jsonify('Erro ao retornar lista de vasos!'), 406)
+
+
+# App mobile realiza para alterar o estado dos vasos (Informar o vegetal)
+@app.route('/vaso', methods=['PUT'])
+def altera_vaso():
+
+    # Conexão com o banco
+    banco = sqlite3.connect('banco.db')
+    cursor = banco.cursor()
+
+    idVaso = request.json.get('idVaso')
+    nomeVegetal = request.json.get('nomeVegetal')
+
+    try:
+        query_str = 'UPDATE Vaso SET nomeVegetal = \'' + nomeVegetal + \
+                    '\' WHERE id = ' + idVaso
+        cursor.execute(query_str)
+        banco.commit()
+        return make_response(jsonify('Vaso atualizado!'), 201)
+    except Exception as e:
+        return make_response(jsonify('Vaso não atualizado!'), 406)
 
 
 # Nodemcu realiza para verificar se deve ligar a bomba
