@@ -46,6 +46,77 @@ conjunto_vegetal = ['', '']
 # Qual conjunto está ativo
 conjunto_ativo = [0, 0]
 
+
+# App mobile realiza para obter lista de vegetais cadastrados
+@app.route('/vegetal', methods=['GET'])
+def obtem_vegetal():
+    # Conexão com o banco
+    banco = sqlite3.connect('banco.db')
+    cursor = banco.cursor()
+
+    # Lista de vegetais
+    lista_vegetais = []
+
+    # Selecionando os dados do banco
+    query_str = 'SELECT * FROM Vegetal'
+    info = cursor.execute(query_str).fetchall()
+
+    try:
+        for item in info:
+            lista_vegetais.append({"nome": item[0], "tempIdeal": item
+            [1], "umidadeIdeal": item[2]})
+
+        return jsonify({'lista_vegetais': lista_vegetais})
+    except:
+        return make_response(jsonify('Erro ao retornar lista de vegetal!'), 406)
+
+
+# App mobile realiza para cadastrar novo vegetal
+@app.route('/vegetal', methods=['POST'])
+def cadastra_vegetal():
+    # Conexão com o banco
+    banco = sqlite3.connect('banco.db')
+    cursor = banco.cursor()
+
+    # Leitura dos parâmetros recebidos
+    nome = request.json.get('nome')
+    tempIdeal = request.json.get('tempIdeal')
+    umidadeIdeal = request.json.get('umidadeIdeal')
+
+    try:
+        query_str = 'INSERT INTO Vegetal (nome,tempIdeal,umidadeIdeal) VALUES (\'' \
+                    + nome + '\',\'' + tempIdeal + '\',\'' + umidadeIdeal + '\')'
+        cursor.execute(query_str)
+        banco.commit()
+        return make_response(jsonify('Vegetal cadastrado!'), 201)
+    except Exception as e:
+        return make_response(jsonify('Vegetal não cadastrado!'), 406)
+
+
+# App mobile realiza para alterar vegetal cadastrado
+@app.route('/vegetal', methods=['PUT'])
+def altera_vegetal():
+
+    # Conexão com o banco
+    banco = sqlite3.connect('banco.db')
+    cursor = banco.cursor()
+
+    # Leitura dos parâmetros recebidos
+    nome = request.json.get('nome')
+    tempIdeal = request.json.get('tempIdeal')
+    umidadeIdeal = request.json.get('umidadeIdeal')
+    print(type(int(tempIdeal)))
+
+    try:
+        query_str = 'UPDATE Vegetal SET tempIdeal = ' + tempIdeal + ', umidadeIdeal = ' + umidadeIdeal + \
+                    ' WHERE nome = \'' + nome + '\''
+        cursor.execute(query_str)
+        print(banco.commit())
+        return make_response(jsonify('Vegetal atualizado!'), 201)
+    except Exception as e:
+        return make_response(jsonify('Vegetal não atualizado!'), 406)
+
+
 # Nodemcu realiza para verificar se deve ligar a bomba
 @app.route('/bomba', methods=['GET'])
 def obtem_bomba():
@@ -76,8 +147,7 @@ def add_info():
                     + idConjunto + '\',\'' + temperatura + '\',\'' + umidade + '\',\'' + conjunto_vegetal[int(idConjunto)-1] + '\',\'' + data + '\')'
         cursor.execute(query_str)
 
-        # Analisando situação do vegetal
-        verifica_medidas(idConjunto, temperatura, umidade, conjunto_vegetal[int(idConjunto)-1])
+        # Analisando situação do vegetal        verifica_medidas(idConjunto, temperatura, umidade, conjunto_vegetal[int(idConjunto)-1])
 
         try:
             banco.commit()
@@ -123,7 +193,7 @@ def obtem_info():
 
     return jsonify({'lista_info': lista_info})
 
-
+'''
 # App mobile realiza para obter lista de vegetais que podem ser cadastrados
 @app.route('/vegetal', methods=['GET'])
 def obtem_vegetal():
@@ -134,7 +204,7 @@ def obtem_vegetal():
         lista_vegetais.append(item['tipo'])
 
     return jsonify({'lista_bomba': lista_vegetais})
-
+'''
 
 # App mobile realiza indicar tipo de vegetal
 @app.route('/cadastro', methods=['POST'])
