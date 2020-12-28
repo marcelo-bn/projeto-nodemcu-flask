@@ -9,24 +9,6 @@ auth = HTTPBasicAuth()
 # Criando objeto da classe Flask
 app = Flask(__name__)
 
-# Lista do conjuntos que devem acionar a bomba
-lista_bomba = [
-    {
-        "idConjunto": "1",
-        "tempo": "10"
-    },
-    {
-        "idConjunto": "2",
-        "tempo": "7"
-    }
-]
-
-# Qual tipo de vegetal é cada conjunto [0] - Conjunto 1, [1] - Conjunto 2,
-conjunto_vegetal = ['', '']
-
-# Qual conjunto está ativo
-conjunto_ativo = [0, 0]
-
 
 # App mobile realiza para obter lista de vegetais cadastrados
 @app.route('/vegetal', methods=['GET'])
@@ -223,7 +205,7 @@ def liga_bomba():
 
     return jsonify({'lista_vasos_bomba': lista_vasos_bomba})
 
-'''
+
 # Nodemcu realiza para inserir informação no banco
 @app.route('/informacao', methods=['POST'])
 def add_info():
@@ -238,84 +220,52 @@ def add_info():
     umidade = request.json.get('u')
     data = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
+    # Verifica se o VASO está ativo
+    query_str = 'SELECT status FROM Vaso WHERE id = ' + idVaso
+    aux = cursor.execute(query_str).fetchall() # list[(1,0)]
+    status = aux[0]
 
-
-
-    if conjunto_vegetal[int(idConjunto) - 1] != '':
+    if status[0] == 1:
         # Inserção no banco
-        query_str = 'INSERT INTO Sistema (idConjunto,temperatura,umidade,tipo,data) VALUES (\'' \
-                    + idConjunto + '\',\'' + temperatura + '\',\'' + umidade + '\',\'' + conjunto_vegetal[
-                        int(idConjunto) - 1] + '\',\'' + data + '\')'
+        query_str = 'INSERT INTO Informacao (temperatura,umidade,data,idvaso) VALUES (\'' \
+                    + temperatura + '\',\'' + umidade + '\',\'' + data + '\',\'' + idVaso + '\')'
         cursor.execute(query_str)
-
-        # Analisando situação do vegetal        verifica_medidas(idConjunto, temperatura, umidade, conjunto_vegetal[int(idConjunto)-1])
 
         try:
             banco.commit()
+            verifica_medidas(idVaso, temperatura, umidade) # Analisando situação do vegetal
             return make_response(jsonify('Objeto cadastrado!'), 200)
+
         except Exception as e:
             return make_response(jsonify('Objeto não cadastrado!'), 406)
-'''
+    else:
+        return make_response(jsonify('O Vaso não está ativo!'), 406)
 
-'''
-# Nodemcu realiza para inserir informação no banco
-@app.route('/informacao', methods=['POST'])
-def add_info():
-    global conjunto_vegetal
+
+# Verifica se precisa acionar a bomba e adiciona na lista de bomba
+def verifica_medidas(idVaso, temperatura, umidade):
 
     # Conexão com o banco
     banco = sqlite3.connect('banco.db')
     cursor = banco.cursor()
 
-    # Leitura dos parâmetros recebidos
-    idConjunto = request.json.get('idConjunto')
-    temperatura = request.json.get('temperatura')
-    umidade = request.json.get('umidade')
-    data = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    # Selecionando o nome do vegetal a ser analisado
+    query_str1 = 'SELECT nomeVegetal FROM Vaso WHERE id = ' + idVaso
+    aux = cursor.execute(query_str1).fetchall()[0]
+    nome = aux[0]  # Nome do vegetal que está sendo analisado
+    #banco.close()
 
-    if conjunto_vegetal[int(idConjunto) - 1] != '':
-        # Inserção no banco
-        query_str = 'INSERT INTO Sistema (idConjunto,temperatura,umidade,tipo,data) VALUES (\'' \
-                    + idConjunto + '\',\'' + temperatura + '\',\'' + umidade + '\',\'' + conjunto_vegetal[
-                        int(idConjunto) - 1] + '\',\'' + data + '\')'
+    # Selecionando a temperatura e umidade ideal
+    query_str2 = 'SELECT vegetal.tempIdeal, vegetal.umidadeIdeal FROM Vegetal WHERE nome = \'' + nome + '\''
+    aux2 = cursor.execute(query_str2).fetchall()[0]
+    tempIdeal = aux2[0]
+    umidadeIdeal = aux2[1]
+
+    if float(temperatura) > 0.3 * float(tempIdeal) and float(umidade) < 0.8 * float(umidadeIdeal):
+        query_str = 'UPDATE Vaso SET tempo = \'' + str(5) + '\', bomba = 1' + \
+                    ' WHERE id = ' + idVaso
         cursor.execute(query_str)
-
-        # Analisando situação do vegetal        verifica_medidas(idConjunto, temperatura, umidade, conjunto_vegetal[int(idConjunto)-1])
-
-        try:
-            banco.commit()
-            return make_response(jsonify('Objeto cadastrado!'), 200)
-        except Exception as e:
-            return make_response(jsonify('Objeto não cadastrado!'), 406)
-
-    else:
-        return make_response(jsonify('Objeto não cadastrado, informe o tipo do vegetal!'), 406)
-
-
-# Nodemcu realiza para informar qual conjunto está ativo
-@app.route('/ativo', methods=['POST'])
-def ativos():
-    global conjunto_ativo
-    conjunto1 = request.json.get('conjunto1')
-    conjunto2 = request.json.get('conjunto2')
-
-    try:
-        conjunto_ativo[0] = int(conjunto1)
-        conjunto_ativo[1] = int(conjunto2)
-        return make_response(jsonify('Ativação concluída!'), 200)
-    except Exception as e:
-        return make_response(jsonify('Erro ao realizar operação!'), 406)
-'''
-
-# Verifica se precisa acionar a bomba e adiciona na lista de bomba
-def verifica_medidas(idConjunto, temperatura, umidade, tipo):
-    global lista_bomba, vegetais
-    vegetal = next(item for item in vegetais if item["tipo"] == tipo)
-
-    if float(temperatura) > 0.3 * float(vegetal['temperatura']) and float(umidade) < 0.8 * float(vegetal['umidade']):
-        lista_bomba.append({"idConjunto": idConjunto, "tempo": "8"})
-
-    return True
+        banco.commit()
 
 
 if __name__ == "__main__":
