@@ -162,7 +162,47 @@ def desliga_vaso():
         return make_response(jsonify('Não foi possível desligar o vaso!'), 406)
 
 
+# App mobile realiza para ligar a bomba dos vasos
+@app.route('/bomba', methods=['PUT'])
+def ativa_bomba():
 
+    # Conexão com o banco
+    banco = sqlite3.connect('banco.db')
+    cursor = banco.cursor()
+
+    idVaso = request.json.get('idVaso')
+    tempo = request.json.get('tempo')
+
+    try:
+        query_str = 'UPDATE Vaso SET tempo = \'' + tempo + '\', bomba = 1' + \
+                    ' WHERE id = ' + idVaso
+        cursor.execute(query_str)
+        banco.commit()
+        return make_response(jsonify('A bomba será ativada!'), 201)
+    except Exception as e:
+        return make_response(jsonify('Erro ao ativar bomba!'), 406)
+
+
+# App mobile realiza para obter dados do banco
+@app.route('/informacao', methods=['GET'])
+def obtem_info():
+    # Conexão com o banco
+    banco = sqlite3.connect('banco.db')
+    cursor = banco.cursor()
+
+    # Lista de informação
+    lista_info = []
+
+    # Selecionando os dados do banco
+    query_str = 'SELECT informacao.idVaso, vaso.nomeVegetal, informacao.temperatura, informacao.umidade, informacao.data ' \
+                'FROM Informacao JOIN Vaso ON informacao.idVaso = Vaso.id'
+
+    info = cursor.execute(query_str).fetchall()
+    for item in info:
+        lista_info.append({"idVaso": item[0], "nomeVegetal": item[1], "temperatura": item
+        [2], "umidade": item[3], "data": item[4]})
+
+    return jsonify({'lista_info': lista_info})
 
 
 
@@ -227,77 +267,6 @@ def ativos():
         return make_response(jsonify('Ativação concluída!'), 200)
     except Exception as e:
         return make_response(jsonify('Erro ao realizar operação!'), 406)
-
-
-# App mobile realiza para obter dados do banco
-@app.route('/informacao', methods=['GET'])
-def obtem_info():
-    # Conexão com o banco
-    banco = sqlite3.connect('banco.db')
-    cursor = banco.cursor()
-
-    # Lista de informação
-    lista_info = []
-
-    # Selecionando os dados do banco
-    query_str = 'SELECT * FROM Sistema'
-    info = cursor.execute(query_str).fetchall()
-    for item in info:
-        lista_info.append({"idConjunto": item[1], "temperatura": item
-        [2], "umidade": item[3], "tipo": item[4], "data": item[5]})
-
-    return jsonify({'lista_info': lista_info})
-
-'''
-# App mobile realiza para obter lista de vegetais que podem ser cadastrados
-@app.route('/vegetal', methods=['GET'])
-def obtem_vegetal():
-    global vegetais
-    lista_vegetais = []
-
-    for item in vegetais:
-        lista_vegetais.append(item['tipo'])
-
-    return jsonify({'lista_bomba': lista_vegetais})
-'''
-
-# App mobile realiza indicar tipo de vegetal
-@app.route('/cadastro', methods=['POST'])
-def add_vegetal():
-    global conjunto_vegetal, vegetais, conjunto_ativo
-
-    tipo = request.json.get('tipo')
-    idConjunto = request.json.get('idConjunto')
-
-    if conjunto_ativo[int(idConjunto)-1] == 1: # Verifica se o conjunto está ativo
-        for item in vegetais:
-            if tipo == item['tipo']: # Verifica se o tipo recebido está na lista de vegetais
-                try:
-                    conjunto_vegetal[int(idConjunto) - 1] = tipo # Adiciona o tipo na posição referente ao conjunto
-                    return make_response(jsonify('Vegetal cadastrado!'), 200)
-                except:
-                    return make_response(jsonify('Erro ao cadastrar vegetal!'), 406)
-    else:
-        return make_response(jsonify('Esse conjunto não está ativo!'), 406)
-
-
-# App mobile realiza para ligar bomba
-@app.route('/bomba', methods=['POST'])
-def add_bomba():
-    global lista_bomba
-
-    # Leitura dos parâmetros recebidos
-    idConjunto = request.json.get('idConjunto')
-    tempo = request.json.get('tempo')
-
-    if conjunto_ativo[int(idConjunto) - 1] == 1:  # Verifica se o conjunto está ativo
-        try:
-            lista_bomba.append({"idConjunto": idConjunto, "tempo": tempo})
-            return make_response(jsonify('A bomba será acionada!'), 200)
-        except:
-            return make_response(jsonify('Erro ao acionar bomba'), 406)
-    else:
-        return make_response(jsonify('Esse conjunto não está ativo!'), 406)
 
 
 # Verifica se precisa acionar a bomba e adiciona na lista de bomba
