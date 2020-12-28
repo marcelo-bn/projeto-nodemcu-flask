@@ -122,7 +122,7 @@ def obtem_vaso():
         return make_response(jsonify('Erro ao retornar lista de vasos!'), 406)
 
 
-# App mobile realiza para alterar o estado dos vasos (Informar o vegetal)
+# App mobile realiza para alterar o estado dos vasos (Informa o vegetal)
 @app.route('/vaso', methods=['PUT'])
 def altera_vaso():
 
@@ -134,13 +134,42 @@ def altera_vaso():
     nomeVegetal = request.json.get('nomeVegetal')
 
     try:
-        query_str = 'UPDATE Vaso SET nomeVegetal = \'' + nomeVegetal + \
-                    '\' WHERE id = ' + idVaso
+        query_str = 'UPDATE Vaso SET nomeVegetal = \'' + nomeVegetal + '\', status = 1' + \
+                    ' WHERE id = ' + idVaso
         cursor.execute(query_str)
         banco.commit()
         return make_response(jsonify('Vaso atualizado!'), 201)
     except Exception as e:
         return make_response(jsonify('Vaso não atualizado!'), 406)
+
+
+# App mobile realiza para desligar os vasos
+@app.route('/vaso', methods=['DELETE'])
+def desliga_vaso():
+
+    # Conexão com o banco
+    banco = sqlite3.connect('banco.db')
+    cursor = banco.cursor()
+
+    idVaso = request.json.get('idVaso')
+
+    try:
+        query_str = 'UPDATE Vaso SET nomeVegetal = null, status = 0 WHERE id = ' + idVaso
+        cursor.execute(query_str)
+        banco.commit()
+        return make_response(jsonify('Vaso desligado!'), 201)
+    except Exception as e:
+        return make_response(jsonify('Não foi possível desligar o vaso!'), 406)
+
+
+
+
+
+
+
+
+
+
 
 
 # Nodemcu realiza para verificar se deve ligar a bomba
