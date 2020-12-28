@@ -249,17 +249,12 @@ def verifica_medidas(idVaso, temperatura, umidade):
     banco = sqlite3.connect('banco.db')
     cursor = banco.cursor()
 
-    # Selecionando o nome do vegetal a ser analisado
-    query_str1 = 'SELECT nomeVegetal FROM Vaso WHERE id = ' + idVaso
-    aux = cursor.execute(query_str1).fetchall()[0]
-    nome = aux[0]  # Nome do vegetal que está sendo analisado
-    #banco.close()
+    query_str = 'SELECT Vegetal.tempIdeal, Vegetal.umidadeIdeal FROM Vaso INNER JOIN Vegetal ON Vaso.nomeVegetal = Vegetal.nome' \
+                ' WHERE Vaso.id = ' + idVaso
 
-    # Selecionando a temperatura e umidade ideal
-    query_str2 = 'SELECT vegetal.tempIdeal, vegetal.umidadeIdeal FROM Vegetal WHERE nome = \'' + nome + '\''
-    aux2 = cursor.execute(query_str2).fetchall()[0]
-    tempIdeal = aux2[0]
-    umidadeIdeal = aux2[1]
+    aux = cursor.execute(query_str).fetchall()[0]
+    tempIdeal = aux[0]
+    umidadeIdeal = aux[1]
 
     if float(temperatura) > 0.3 * float(tempIdeal) and float(umidade) < 0.8 * float(umidadeIdeal):
         query_str = 'UPDATE Vaso SET tempo = \'' + str(5) + '\', bomba = 1' + \
