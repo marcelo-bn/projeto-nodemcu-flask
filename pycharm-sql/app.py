@@ -217,15 +217,12 @@ def vaso_ativo():
     lista_vasos_ativos = []
 
     # Selecionando os dados do banco
-    query_str = 'SELECT * FROM Vaso'
-    info = cursor.execute(query_str).fetchall()
+    query_str = 'SELECT status FROM Vaso'
+    info = cursor.execute(query_str).fetchall() # list[(1,),(1,)]
+    status_vaso1 = info[0]
+    status_vaso2 = info[1]
 
-    vaso1 = info[0]
-    status_vaso1 = vaso1[1]
-    vaso2 = info[1]
-    status_vaso2 = vaso2[1]
-
-    lista_vasos_ativos.append({"idVaso1": status_vaso1, "idVaso2": status_vaso2})
+    lista_vasos_ativos.append({"idVaso1": status_vaso1[0], "idVaso2": status_vaso2[0]})
 
     return jsonify({'lista_vasos_bomba': lista_vasos_ativos})
 
