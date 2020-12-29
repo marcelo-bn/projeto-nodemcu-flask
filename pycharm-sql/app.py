@@ -197,13 +197,37 @@ def liga_bomba():
     info = cursor.execute(query_str).fetchall()
 
     for item in info:
-        if item[2] == 1:
+        if item[2] == 1:  # Verifica se a bomba do vaso está em 1
             lista_vasos_bomba.append({"idVaso": item[0], "tempo": item[3]})
             query_str = 'UPDATE Vaso SET tempo = 0, bomba = 0 WHERE id = ' + str(item[0]) # Zera novamente a bomba do vaso
             cursor.execute(query_str)
             banco.commit()
 
     return jsonify({'lista_vasos_bomba': lista_vasos_bomba})
+
+# Nodemcu realiza para verificar qual vaso está ativo
+@app.route('/ativo', methods=['GET'])
+def vaso_ativo():
+
+    # Conexão com o banco
+    banco = sqlite3.connect('banco.db')
+    cursor = banco.cursor()
+
+    # Lista de vasos que devem ligar a bomba
+    lista_vasos_ativos = []
+
+    # Selecionando os dados do banco
+    query_str = 'SELECT * FROM Vaso'
+    info = cursor.execute(query_str).fetchall()
+
+    vaso1 = info[0]
+    status_vaso1 = vaso1[1]
+    vaso2 = info[1]
+    status_vaso2 = vaso2[1]
+
+    lista_vasos_ativos.append({"idVaso1": status_vaso1, "idVaso2": status_vaso2})
+
+    return jsonify({'lista_vasos_bomba': lista_vasos_ativos})
 
 
 # Nodemcu realiza para inserir informação no banco
