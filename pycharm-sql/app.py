@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, make_response
 from flask_httpauth import HTTPBasicAuth
+from flask_cors import CORS
 import sqlite3
 from datetime import datetime
 
@@ -8,7 +9,7 @@ auth = HTTPBasicAuth()
 
 # Criando objeto da classe Flask
 app = Flask(__name__)
-
+CORS(app)
 
 # App mobile realiza para obter lista de vegetais cadastrados
 @app.route('/vegetal', methods=['GET'])
