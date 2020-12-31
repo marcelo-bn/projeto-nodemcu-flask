@@ -1,11 +1,11 @@
 from flask import Flask, jsonify, request, make_response
-from flask_httpauth import HTTPBasicAuth
+#from flask_httpauth import HTTPBasicAuth
 from flask_cors import CORS
 import sqlite3
 from datetime import datetime
 
 # Criando objeto da classe HTTP
-auth = HTTPBasicAuth()
+#auth = HTTPBasicAuth()
 
 # Criando objeto da classe Flask
 app = Flask(__name__)
