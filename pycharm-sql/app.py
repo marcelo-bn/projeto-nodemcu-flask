@@ -173,7 +173,7 @@ def obtem_info():
 
     # Selecionando os dados do banco
     query_str = 'SELECT informacao.idVaso, vaso.nomeVegetal, informacao.temperatura, informacao.umidade, informacao.data ' \
-                'FROM Informacao JOIN Vaso ON informacao.idVaso = Vaso.id'
+                'FROM Informacao JOIN Vaso ON informacao.idVaso = Vaso.id ORDER BY informacao.data desc'
 
     info = cursor.execute(query_str).fetchall()
     for item in info:
@@ -194,17 +194,20 @@ def liga_bomba():
     lista_vasos_bomba = []
 
     # Selecionando os dados do banco
-    query_str = 'SELECT * FROM Vaso'
-    info = cursor.execute(query_str).fetchall()
+    query_str = 'SELECT tempo FROM Vaso'
+    info = cursor.execute(query_str).fetchall() # list [(0,),(0,)]
+    tempo1 = info[0]
+    tempo2 = info[1]
 
-    for item in info:
-        if item[2] == 1:  # Verifica se a bomba do vaso está em 1
-            lista_vasos_bomba.append({"idVaso": item[0], "tempo": item[3]})
-            query_str = 'UPDATE Vaso SET tempo = 0, bomba = 0 WHERE id = ' + str(item[0]) # Zera novamente a bomba do vaso
-            cursor.execute(query_str)
-            banco.commit()
+    try:
+        lista_vasos_bomba.append({"tempo1": tempo1[0], "tempo2": tempo2[0]})
+        query_str = 'UPDATE Vaso SET tempo = 0, bomba = 0' # Zera novamente a bomba do vaso
+        cursor.execute(query_str)
+        banco.commit()
+        return jsonify({'lista_vasos_bomba': lista_vasos_bomba})
 
-    return jsonify({'lista_vasos_bomba': lista_vasos_bomba})
+    except:
+        return make_response(jsonify('Erro!'), 404)
 
 # Nodemcu realiza para verificar qual vaso está ativo
 @app.route('/ativo', methods=['GET'])
