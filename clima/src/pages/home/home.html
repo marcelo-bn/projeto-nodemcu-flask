@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Informação</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <table id="tabelaspec">
+   
+    <tr>
+      <th>Vaso</th>
+      <th>Vegetal</th>
+      <th>Temp.</th>
+      <th>Umidade</th>
+      <th>Data</th>
+    </tr>
+    <ng-container *ngFor="let item of info">
+      <tr>
+        <td>{{item.idVaso}}</td>
+        <td>{{item.nomeVegetal}}</td>
+        <td>{{item.temperatura}}</td>
+        <td>{{item.umidade}}</td>
+        <td>{{item.data}}</td>
+      </tr>
+    </ng-container>
+  </table> 
+</ion-content>
