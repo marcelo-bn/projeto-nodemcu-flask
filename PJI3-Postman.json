@@ -1,0 +1,299 @@
+{
+	"info": {
+		"_postman_id": "a84a18c1-0b25-4e8a-9fe0-0d585b37a412",
+		"name": "PJI3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "NODEMCU",
+			"item": [
+				{
+					"name": "http://localhost:3001/informacao",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"idVaso\":\"2\",\"t\":\"300.8\",\"u\":\"0.5\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/informacao",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"informacao"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:3001/bomba",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/bomba",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"bomba"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:3001/ativo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/ativo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ativo"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Aplicativo",
+			"item": [
+				{
+					"name": "http://localhost:3001/bomba",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"idVaso\":\"2\",\"tempo\":\"7\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/bomba",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"bomba"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:3001/informacao",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3001/informacao",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"informacao"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:3001/vegetal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/vegetal",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"vegetal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:3001/vegetal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nome\":\"salsinha\",\"tempIdeal\":\"25\",\"umidadeIdeal\":\"65\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/vegetal",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"vegetal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:3001/vegetal",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"nome\":\"tomate\",\"tempIdeal\":\"30\",\"umidadeIdeal\":\"50\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/vegetal",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"vegetal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:3001/vaso",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3001/vaso",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"vaso"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:3001/vaso",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"idVaso\":\"2\",\"nomeVegetal\":\"cebolinha\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/vaso",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"vaso"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:3001/vaso",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"idVaso\":\"2\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/vaso",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"vaso"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
