@@ -12,4 +12,23 @@
 
 <ion-content padding>
 
+  <ion-card *ngIf="vaso1" id="cardspec">
+    <h1>Vaso 1</h1>  
+    <h2>O último acionamento ocorreu em: <strong>{{vaso1["ultimaBomba"]}}</strong></h2>
+    <ion-input max="10" min= "1" type="number" text-center [(ngModel)]="tempoBomba1" placeholder="Insira o tempo de funcionamento da bomba" id="placeholderSpec"></ion-input>
+    <div style="text-align: center">
+      <button id="buttonBomba" ion-button (click)="acionaBomba(1)">Acionar</button>
+    </div>
+  </ion-card>
+
+  <ion-card *ngIf="vaso2" id="cardspec">
+    <h1>Vaso 2</h1>  
+    <h2>O último acionamento ocorreu em: <strong>{{vaso2["ultimaBomba"]}}</strong></h2>
+    <ion-input max="10" min= "1" type="number" text-center [(ngModel)]="tempoBomba2" placeholder="Insira o tempo de funcionamento da bomba" id="placeholderSpec"></ion-input>
+    <div style="text-align: center">
+      <button id="buttonBomba" ion-button (click)="acionaBomba(2)">Acionar</button>
+    </div>
+  </ion-card>
+  
+  
 </ion-content>

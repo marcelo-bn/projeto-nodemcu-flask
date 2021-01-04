@@ -7,17 +7,11 @@ export class ClimaProvider {
 
   info : any;
 
-  constructor(public http: HttpClient) {
-    console.log('Hello ClimaProvider Provider');
-  }
+  constructor(public http: HttpClient) {}
 
 
   getInfo(){
-    return this.http.get('http://localhost:3001/informacao');    
-    //subscribe((response) => {
-    
-     // this.info = response
-    //});
+    return this.http.get('http://localhost:5000/informacao');    
   }
 
 }
