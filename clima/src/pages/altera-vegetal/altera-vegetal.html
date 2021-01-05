@@ -1,0 +1,37 @@
+<!--
+  Generated template for the AlteraVegetalPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>Alterar Vegetal</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div *ngIf="vegetal">
+    <h3 style="text-align: center; color:  rgb(125, 197, 103);">Dados do Vegetal</h3>
+    <ion-card id="cardSpec">
+       <strong>Nome: </strong> {{vegetal.nome}} <br>
+       <strong>Temperatura ideal (Celsius): </strong> {{vegetal.tempIdeal}} <br>
+       <strong>Umidade ideal (%): </strong> {{vegetal.umidadeIdeal}} <br>
+    </ion-card>
+  </div>
+  
+  <div>
+    <ion-input max="50" min= "0" type="number" text-center [(ngModel)]="novaTempIdeal" placeholder="Nova temperatura ideal" id="placeholderSpec"></ion-input>
+    <div style="text-align: center">
+      <button style="background-color: rgb(125, 197, 103)" id="buttonNovaTemperaturaIdeal" ion-button (click)="novaTempIdeal">Alterar</button>
+    </div>
+  </div>
+
+  <div>
+    <ion-input max="100" min= "0" type="number" text-center [(ngModel)]="novaUmiIdeal" placeholder="Nova umidade ideal" id="placeholderSpec"></ion-input>
+    <div style="text-align: center">
+      <button style="background-color: rgb(125, 197, 103)" id="buttonNovaUmidadeIdeal" ion-button (click)="novaUmiIdeal">Alterar</button>
+    </div>
+  </div>
+
+</ion-content>

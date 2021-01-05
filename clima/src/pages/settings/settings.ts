@@ -23,6 +23,14 @@ export class SettingsPage {
   constructor(public navCtrl: NavController, private bombaProvider: BombaProvider) {
   }
 
+  doRefresh(event) {
+
+    setTimeout(() => {
+      console.log("tests")
+      event.target.complete();  
+      ; }, 2000);
+  }
+
   ionViewWillEnter(){
     this.bombaProvider.getInfo().subscribe(info => {
       this.info = info

@@ -7,5 +7,24 @@
 </ion-header>
 
 <ion-content padding>
-  
+  <ion-row>
+
+    <ion-col id="colSpec">
+      <h4>Vegetais</h4>
+      <ion-card>
+       <ion-item *ngFor="let item of vegetais">
+        <ion-label>{{item.nome}}</ion-label>
+        <button ion-button outline item-end (click)="alteraVegetalPagina(item)">
+          <ion-icon name="create"></ion-icon>
+        </button>
+       </ion-item>
+      </ion-card>
+    </ion-col>
+
+    <ion-col id="colSpec">
+      <h4>Vasos</h4>
+      <ion-card>TESTE</ion-card>
+    </ion-col>
+  </ion-row>
+
 </ion-content>
