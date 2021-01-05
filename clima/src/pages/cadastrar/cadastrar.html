@@ -23,8 +23,17 @@
 
     <ion-col id="colSpec">
       <h4>Vasos</h4>
-      <ion-card>TESTE</ion-card>
+      <ion-card>
+       <ion-item *ngFor="let item of vasos">
+        <ion-label>Vaso {{item.id}}: {{item.vegetal}}</ion-label>
+        <button ion-button outline item-end (click)="alteraVasoPagina(item)">
+          <ion-icon name="create"></ion-icon>
+        </button>
+       </ion-item>
+      </ion-card>
     </ion-col>
+
   </ion-row>
+
 
 </ion-content>

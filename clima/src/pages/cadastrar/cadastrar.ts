@@ -9,6 +9,7 @@ import { AlteraVegetalPage } from '../altera-vegetal/altera-vegetal';
 })
 export class CadastrarPage {
   vegetais: any;
+  vasos: any;
 
   constructor(public navCtrl: NavController, private cadastrarProvider: CadastrarProvider) {
    
@@ -19,11 +20,22 @@ export class CadastrarPage {
     this.navCtrl.push(AlteraVegetalPage, {vegetal: vegetal})
   }
 
+   // Método PUT
+   alteraVasoPagina(vaso){
+    //this.navCtrl.push(AlteraVasoPage, {vaso: vaso})
+  }
+
   ionViewWillEnter(){
     this.cadastrarProvider.getVegetal().subscribe(info => {
       this.vegetais = info
       this.vegetais = this.vegetais.lista_vegetais
-      console.log(this.vegetais)
+      //console.log(this.vegetais)
+    });
+
+    this.cadastrarProvider.getVaso().subscribe(info => {
+      this.vasos = info
+      this.vasos = this.vasos.lista_vasos
+      //console.log(this.vegetais)
     });
   }
 

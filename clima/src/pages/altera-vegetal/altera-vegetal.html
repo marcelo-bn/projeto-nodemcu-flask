@@ -22,16 +22,11 @@
   
   <div>
     <ion-input max="50" min= "0" type="number" text-center [(ngModel)]="novaTempIdeal" placeholder="Nova temperatura ideal" id="placeholderSpec"></ion-input>
+    <ion-input max="100" min= "0" type="number" text-center [(ngModel)]="novaUmiIdeal" placeholder="Nova umidade ideal" id="placeholderSpec"></ion-input>
     <div style="text-align: center">
-      <button style="background-color: rgb(125, 197, 103)" id="buttonNovaTemperaturaIdeal" ion-button (click)="novaTempIdeal">Alterar</button>
+      <button style="background-color: rgb(125, 197, 103)" id="buttonAlteraVegetal" ion-button (click)="alteraVegetal(vegetal,novaTempIdeal,novaUmiIdeal)">Alterar</button>
     </div>
   </div>
 
-  <div>
-    <ion-input max="100" min= "0" type="number" text-center [(ngModel)]="novaUmiIdeal" placeholder="Nova umidade ideal" id="placeholderSpec"></ion-input>
-    <div style="text-align: center">
-      <button style="background-color: rgb(125, 197, 103)" id="buttonNovaUmidadeIdeal" ion-button (click)="novaUmiIdeal">Alterar</button>
-    </div>
-  </div>
 
 </ion-content>

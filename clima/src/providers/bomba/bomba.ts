@@ -24,7 +24,7 @@ export class BombaProvider {
     const headers = new HttpHeaders()
     .set("Content-Type", "application/json");
 
-    console.log(JSON.stringify(body))
+    //console.log(JSON.stringify(body))
     return this.http.put('http://localhost:5000/bomba', JSON.stringify(body), 
                         {headers}).subscribe(
                                     val => {
